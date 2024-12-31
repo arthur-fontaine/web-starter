@@ -1,0 +1,33 @@
+tasks:
+  dev:
+    command: 'gow run ./cmd/server/main.go'
+    inputs:
+      - '**/*.go'
+    options:
+      persistent: true
+
+  build:
+    command:
+      - 'go build -o dist/api ./cmd/server/main.go'
+    inputs:
+      - '**/*.go'
+    outputs:
+      - 'dist'
+
+  generate:
+    command:
+      - 'buf generate --template proto/buf.gen.yaml'
+      - '&& go run github.com/stephenafamo/bob/gen/bobgen-psql@latest -c db/bobgen.yaml'
+    inputs:
+      - 'proto/**/*.proto'
+      - 'proto/buf.*'
+      - 'db/bobgen.yaml'
+    outputs:
+      - 'gen'
+  
+  migrate:
+    command: 'npx prisma migrate dev --schema=./db/schema.prisma'
+    inputs:
+      - 'db/schema.prisma'
+    outputs:
+      - 'db/migrations'

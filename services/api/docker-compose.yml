@@ -1,0 +1,15 @@
+services:
+  api:
+    build:
+      context: services/api
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8080
+    networks:
+      - postgres
+      - api
+    depends_on:
+      - postgres
+    
+networks:
+  api:

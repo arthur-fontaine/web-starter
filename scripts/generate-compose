@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+script_dir=$(dirname "$0")
+project_dir=$(realpath "$script_dir/..")
+
+get_all_compose_files() {
+    find "$project_dir" \
+        -name 'docker-compose.yml' \
+        -o -name 'docker-compose-*.yml' \
+        -o -name 'docker-compose.*.yml'
+}
+
+format_compose_files_arg() {
+    local compose_files=("$@")
+    for compose_file in "${compose_files[@]}"; do
+        printf -- "-f %s " "$compose_file"
+    done
+}
+
+generate_merged_compose() {
+    local compose_files=("$@")
+    local merged_compose_file="$project_dir/docker-compose-merged.yml"
+    docker compose \
+        -f "$project_dir/docker-compose-base.yml" \
+        $(format_compose_files_arg "${compose_files[@]}") \
+        config \
+        --no-interpolate | sed 's/\${PROJECT_PATH}\///g' > "$merged_compose_file"
+}
+
+main() {
+    local compose_files=($(get_all_compose_files))
+    generate_merged_compose "${compose_files[@]}"
+}
+
+main "$@"

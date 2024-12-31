@@ -1,0 +1,42 @@
+tasks:
+  android:
+    command:
+    - expo run:android
+    platform: node
+  format-check:
+    command:
+    - biome format
+    platform: node
+  format-fix:
+    command:
+    - biome format --write
+    platform: node
+  ios:
+    command:
+    - expo run:ios
+    platform: node
+  knip:
+    command: knip
+    platform: node
+  lint-check:
+    command:
+    - biome check
+    platform: node
+  lint-fix:
+    command:
+    - biome check --write
+    platform: node
+  start:
+    command:
+    - expo start
+    local: true
+    platform: node
+  test:
+    command:
+    - jest --watchAll
+    local: true
+    platform: node
+  web:
+    command:
+    - expo start --web
+    platform: node

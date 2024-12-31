@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package media.v1;
+
+option go_package = "github.com/arthur-fontaine/culty/services/api/gen/proto/media/v1;mediav1";
+
+message Empty {}
+
+message MediumRequest {
+  string id = 1;
+}
+
+message Medium {
+  string id = 1;
+  string title = 2;
+}
+
+message MediumList {
+  repeated Medium media = 1;
+}
+
+service MediaService {
+  rpc ListMedia(Empty) returns (MediumList) {}
+  rpc GetMedium(MediumRequest) returns (Medium) {}
+}
